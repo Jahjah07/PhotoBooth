@@ -1,0 +1,4 @@
+[
+    { "layout": "1x3", "url": "/frames/1X3.png", "name": "Template 1x3" },
+    { "layout": "2x3", "url": "/frames/2X3.png", "name": "Template 2x3" }
+  ]

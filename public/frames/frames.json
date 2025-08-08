@@ -1,0 +1,6 @@
+[
+    { "layout": "1x3", "url": "/frames/1x3-frame1.png", "name": "Classic 1x3" },
+    { "layout": "1x3", "url": "/frames/1x3-frame2.png", "name": "Fun 1x3" },
+    { "layout": "2x3", "url": "/frames/2x3-frame1.png", "name": "Classic 2x3" },
+    { "layout": "2x3", "url": "/frames/2x3-frame2.png", "name": "Fun 2x3" }
+  ]
