@@ -25,7 +25,7 @@
           <img v-for="(photo, idx) in gallery" :key="idx" :src="photo" class="gallery-photo" @click="openPreview(photo)" />
         </div>
         <button @click="retakeAllPhotos">Retake All Photos</button>
-        <button @click="goToFrameSelection">Next: Select Frame</button>
+        <button @click="goToFrameDesign">Next: Select Frame</button>
       </div>
       <div v-if="previewPhoto" class="modal-overlay" @click.self="closePreview">
         <div class="modal-content">
@@ -38,9 +38,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useGalleryStore } from '../stores/useGalleryStore'
+import { useFrameStore } from '../stores/frameStore' // ✅ import frame store
 
 const videoRef = ref<HTMLVideoElement | null>(null)
 const canvasRef = ref<HTMLCanvasElement | null>(null)
@@ -50,7 +51,17 @@ const errorMsg = ref('')
 const captureError = ref('')
 
 const { gallery } = useGalleryStore()
-const maxPhotos = 9
+const frameStore = useFrameStore() // ✅ get frame store
+const photos = frameStore.takenPhotos;
+
+// ✅ Dynamic maxPhotos based on selected frame
+const totalPhotos = computed(() => {
+  if (!frameStore.selectedFrame) return 0
+  return frameStore.selectedFrame?.photos || 0;
+})
+const extraShots = 2;
+const maxPhotos = computed(() => totalPhotos.value + extraShots);
+
 const showGallery = ref(false)
 const isTakingSequence = ref(false)
 const currentPhotoIdx = ref(0)
@@ -109,7 +120,7 @@ function takePhotoSequence() {
 }
 
 function runCountdownAndCapture() {
-  if (currentPhotoIdx.value >= maxPhotos) {
+  if (currentPhotoIdx.value >= maxPhotos.value) {
     isTakingSequence.value = false
     showGallery.value = true
     return
@@ -174,10 +185,12 @@ function closePreview() {
   previewPhoto.value = null
 }
 
-function goToFrameSelection() {
-  router.push('/frame')
+function goToFrameDesign() {
+  frameStore.setTakenPhotos(gallery.value);
+  router.push('/photoboothSelection');
 }
 </script>
+
 
 <style scoped>
 .photobooth {

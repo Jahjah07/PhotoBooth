@@ -12,10 +12,9 @@
       </div>
     </div>
     <div class="cta-section">
-      <button class="cta-button" @click="startPhotobooth">
+      <button class="cta-button" @click="FrameSelection">
         Start →
       </button>
-      <!-- <button class="cta-button" @click="goToFrameSelection">Start →</button> -->
     </div>
   </div>
 </template>
@@ -25,12 +24,9 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-function startPhotobooth() {
-  router.push('/photobooth')
+function FrameSelection() {
+  router.push('/frameSelection')
 }
-// function goToFrameSelection() {
-//   router.push('/frame')
-// }
 </script>
 
 <style scoped>
