@@ -1,83 +1,124 @@
 // stores/frameStore.ts
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia'
 
-export const useFrameStore = defineStore("frame", {
+export const useFrameStore = defineStore('frame', {
   state: () => ({
-    frames: [] as Array<{ name: string; layout: string; photos?: number; [key: string]: any }>,
-    selectedFrame: null as { name: string; layout: string; photos?: number; [key: string]: any } | null,
+    templates: [] as any[],         // from template-frames.json
+    designs: [] as any[],           // from frames.json
+    selectedTemplate: null as any | null,
+    selectedDesign: null as any | null,
     totalPhotos: 0,
-
-    // ✅ Stores captured photos from the PhotoBooth
     takenPhotos: [] as string[],
-
-    // ✅ Stores photos the user picked for the final frame
-    selectedPhotos: [] as string[]
+    selectedPhotos: [] as string[],
   }),
 
   actions: {
-    async loadFrames() {
+    /** Load template layouts (user chooses first) */
+    async loadTemplates() {
       try {
-        const res = await fetch("/frames/template-frames.json");
-        const data = await res.json();
-        this.frames = data;
+        const res = await fetch('/frames/template-frames.json')
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        this.templates = await res.json()
+        console.log('Templates loaded:', this.templates)
 
-        // Auto-select first frame if none selected
-        if (!this.selectedFrame && this.frames.length > 0) {
-          this.selectFrame(this.frames[0]);
+        if (!this.selectedTemplate && this.templates.length > 0) {
+          this.selectTemplate(this.templates[0])
         }
       } catch (err) {
-        console.error("Failed to load frames:", err);
+        console.error('Failed to load templates:', err)
       }
     },
 
-    selectFrame(frame: { name: string; layout: string; photos?: number; [key: string]: any }) {
-      this.selectedFrame = frame;
-      this.totalPhotos = this.calculateTotalPhotos(frame);
+    /** Load frame designs (matching assets for each template) */
+    async loadDesigns() {
+      try {
+        const res = await fetch('/frames/frames.json')
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        this.designs = await res.json()
+        console.log('Designs loaded:', this.designs)
+      } catch (err) {
+        console.error('Failed to load designs:', err)
+      }
     },
 
-    calculateTotalPhotos(frame: { layout: string; photos?: number; [key: string]: any }) {
-      // If JSON already defines photos, use that
+    /** Select a template (layout) */
+    selectTemplate(template: any) {
+      this.selectedTemplate = template
+      this.totalPhotos = this.calculateTotalPhotos(template)
+      this.selectedDesign = null // reset design when layout changes
+    },
+
+    /** Select a frame design (updates preview image) */
+    selectDesign(design: any) {
+      this.selectedDesign = design
+      if (this.selectedTemplate) {
+        // For FramePreview.vue to show it
+        this.selectedTemplate.image =
+          design.frames?.[0] ?? design.url ?? null
+      }
+    },
+
+    /** Calculate how many photos needed for a layout */
+    calculateTotalPhotos(frame: any) {
+      if (!frame) return 0
+
       if (frame.photos) {
-        return frame.photos + (frame.extraCaptures ? Number(frame.extraCaptures) : 0);
+        return frame.photos + (frame.extraCaptures ? Number(frame.extraCaptures) : 0)
       }
 
-      // Otherwise calculate from layout "3x2"
-      const [cols, rows] = frame.layout.toLowerCase().split("x").map(Number);
-
-      if (isNaN(cols) || isNaN(rows)) {
-        console.warn(`Invalid layout format: ${frame.layout}`);
-        return 0;
-      }
+      const layoutStr = (frame.layout || frame.type || '').toLowerCase();
+      const [cols, rows] = layoutStr.split('x').map((n: string) => parseInt(n, 10));
+      if (isNaN(cols) || isNaN(rows)) return 0;
 
       let total = cols * rows;
-
-      if (frame.extraCaptures) {
-        total += Number(frame.extraCaptures);
-      }
-
-      return total;
+      if (frame.extraCaptures) total += Number(frame.extraCaptures);
+      return total
     },
 
-    // --- PHOTO CAPTURE METHODS ---
+    // Photo capture helpers
     setTakenPhotos(photos: string[]) {
-      this.takenPhotos = photos;
+      this.takenPhotos = photos
     },
-
     addTakenPhoto(photo: string) {
-      this.takenPhotos.push(photo);
+      this.takenPhotos.push(photo)
     },
-
     clearTakenPhotos() {
-      this.takenPhotos = [];
+      this.takenPhotos = []
     },
 
-    // --- PHOTO SELECTION METHODS ---
+    // Selected photos helpers
     setSelectedPhotos(photos: string[]) {
-      this.selectedPhotos = photos;
+      this.selectedPhotos = photos
     },
-
     clearSelectedPhotos() {
-      this.selectedPhotos = [];
+      this.selectedPhotos = []
+    },
+    clearDesign() {
+      this.selectedDesign = null
+    },
+  },
+
+  getters: {
+    /** Filter designs to match current template layout */
+    matchingDesigns(state) {
+      const layout = state.selectedTemplate?.layout?.toLowerCase()
+        || state.selectedTemplate?.type?.toLowerCase()
+      if (!layout) return []
+    
+      const group = state.designs.find(d =>
+        d.type?.toLowerCase() === layout ||
+        d.layout?.toLowerCase() === layout
+      )
+      
+      if (!group) return []
+    
+      return group.frames.map((path: string) => ({
+        name: `${group.type} - ${path.split('/').pop()}`,
+        type: group.type,
+        photos: group.photos,
+        url: path
+      }))
     }
+    
   }
-});
+})

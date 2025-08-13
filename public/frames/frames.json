@@ -1,6 +1,33 @@
 [
-    { "layout": "1x3", "url": "/frames/1x3-frame1.png", "name": "Classic 1x3" },
-    { "layout": "1x3", "url": "/frames/1x3-frame2.png", "name": "Fun 1x3" },
-    { "layout": "2x3", "url": "/frames/2x3-frame1.png", "name": "Classic 2x3" },
-    { "layout": "2x3", "url": "/frames/2x3-frame2.png", "name": "Fun 2x3" }
-  ]
+  {
+    "type": "1x3",
+    "photos": 5,
+    "frames": [
+      "/frames/PhotoboothFrames 1x3/1.jpg",
+      "/frames/PhotoboothFrames 1x3/2.jpg",
+      "/frames/PhotoboothFrames 1x3/3.jpg",
+      "/frames/PhotoboothFrames 1x3/4.jpg",
+      "/frames/PhotoboothFrames 1x3/5.jpg"
+    ]
+  },
+  {
+    "type": "2x2",
+    "photos": 5,
+    "frames": [
+      "/frames/PhotoboothFrames 2x2/1.jpg",
+      "/frames/PhotoboothFrames 2x2/2.jpg",
+      "/frames/PhotoboothFrames 2x2/3.jpg",
+      "/frames/PhotoboothFrames 2x2/4.jpg",
+      "/frames/PhotoboothFrames 2x2/5.jpg"
+    ]
+  },
+  {
+    "type": "2x3",
+    "photos": 6,
+    "frames": [
+      "/frames/PhotoboothFrames 2x3/3.jpg",
+      "/frames/PhotoboothFrames 2x3/4.jpg",
+      "/frames/PhotoboothFrames 2x3/5.jpg"
+    ]
+  }
+]

@@ -1,17 +1,37 @@
 <template>
   <div class="photobooth">
-    <h1>Photobooth JU</h1>
+    <h1 class="title">{{ title }}</h1>
     <div class="video-container">
-      <video ref="videoRef" autoplay playsinline width="400" height="300" :class="{ hidden: loading }" />
+      <video ref="videoRef" autoplay playsinline width="500" height="400" :class="{ hidden: loading }" />
       <div v-if="showFlash" class="flash-overlay"></div>
     </div>
     <canvas ref="canvasRef" width="400" height="300" style="display:none;" />
+    <div v-if="loading" class="loading">Loading camera...</div>
+    <div v-else-if="!isTakingSequence && !showGallery" class="camera-select">
+          <label for="camera">Select Camera:</label>
+          <select id="camera" v-model="selectedDeviceId" @change="startCamera">
+            <option v-for="device in videoDevices" :key="device.deviceId" :value="device.deviceId">
+              {{ device.label || 'Camera ' + device.deviceId }}
+            </option>
+          </select>
+        </div>
     <div v-if="errorMsg" class="error">{{ errorMsg }}</div>
-    <div v-else-if="loading" class="loading">Loading camera...</div>
+    <div v-else-if="loading" class="loading"></div>
     <div v-else>
       <div v-if="!isTakingSequence && !showGallery">
-        <button @click="takePhotoSequence">Take Photos</button>
-        <div v-if="captureError" class="error">{{ captureError }}</div>
+        <div class="timer-select">
+          <label for="timer">Timer: </label>
+          <select id="timer" v-model.number="timerDuration">
+            <option :value="1">1 seconds</option>
+            <option :value="3">3 seconds</option>
+            <option :value="5">5 seconds</option>
+            <option :value="7">7 seconds</option>
+          </select>
+
+          <button @click="takePhotoSequence">Take Photos</button>
+          <div v-if="captureError" class="error">{{ captureError }}</div>
+          <div v-if="errorMsg" class="error">{{ errorMsg }}</div>
+        </div>
       </div>
       <div v-if="isTakingSequence">
         <div class="countdown">
@@ -19,48 +39,40 @@
           <div class="timer">{{ countdown }}</div>
         </div>
       </div>
-      <div v-if="showGallery">
-        <h2>Gallery ({{ gallery.length }}/{{ maxPhotos }})</h2>
-        <div class="gallery">
-          <img v-for="(photo, idx) in gallery" :key="idx" :src="photo" class="gallery-photo" @click="openPreview(photo)" />
-        </div>
-        <button @click="retakeAllPhotos">Retake All Photos</button>
-        <button @click="goToFrameDesign">Next: Select Frame</button>
-      </div>
-      <div v-if="previewPhoto" class="modal-overlay" @click.self="closePreview">
-        <div class="modal-content">
-          <img :src="previewPhoto" class="modal-photo" />
-          <button class="close-btn" @click="closePreview">Close</button>
-        </div>
-      </div>
+
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, nextTick, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useGalleryStore } from '../stores/useGalleryStore'
-import { useFrameStore } from '../stores/frameStore' // ✅ import frame store
+import { useFrameStore } from '../stores/frameStore'
 
 const videoRef = ref<HTMLVideoElement | null>(null)
 const canvasRef = ref<HTMLCanvasElement | null>(null)
+
+const videoDevices = ref<MediaDeviceInfo[]>([])
+const selectedDeviceId = ref<string | null>(null)
+
 const stream = ref<MediaStream | null>(null)
 const loading = ref(true)
 const errorMsg = ref('')
 const captureError = ref('')
 
-const { gallery } = useGalleryStore()
-const frameStore = useFrameStore() // ✅ get frame store
-const photos = frameStore.takenPhotos;
+const timerDuration = ref(3)
+const title = ref('Photobooth JU')
 
-// ✅ Dynamic maxPhotos based on selected frame
+const { gallery } = useGalleryStore()
+const frameStore = useFrameStore()
+
 const totalPhotos = computed(() => {
-  if (!frameStore.selectedFrame) return 0
-  return frameStore.selectedFrame?.photos || 0;
+  if (!frameStore.selectedTemplate) return 0
+  return frameStore.selectedTemplate?.photos || 0
 })
-const extraShots = 2;
-const maxPhotos = computed(() => totalPhotos.value + extraShots);
+const extraShots = 2
+const maxPhotos = computed(() => totalPhotos.value + extraShots)
 
 const showGallery = ref(false)
 const isTakingSequence = ref(false)
@@ -68,30 +80,54 @@ const currentPhotoIdx = ref(0)
 const countdown = ref(4)
 let timerId: number | null = null
 const showFlash = ref(false)
-const previewPhoto = ref<string | null>(null)
 
 const router = useRouter()
 
-onMounted(async () => {
+// Fetch all video input devices and set default selected device
+async function getVideoDevices() {
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices()
+    videoDevices.value = devices.filter(device => device.kind === 'videoinput')
+    if (videoDevices.value.length > 0 && !selectedDeviceId.value) {
+      selectedDeviceId.value = videoDevices.value[0].deviceId
+    }
+  } catch (err) {
+    console.error('Error enumerating devices:', err)
+  }
+}
+
+// Start camera stream based on selectedDeviceId
+async function startCamera() {
   loading.value = true
   errorMsg.value = ''
-  let timeoutId: number | undefined
+
+  // Stop previous stream if exists
+  if (stream.value) {
+    stream.value.getTracks().forEach(track => track.stop())
+    stream.value = null
+  }
+
   try {
-    stream.value = await navigator.mediaDevices.getUserMedia({ video: true })
-    await nextTick()
+    if (!selectedDeviceId.value) {
+      stream.value = await navigator.mediaDevices.getUserMedia({ video: true })
+    } else {
+      stream.value = await navigator.mediaDevices.getUserMedia({
+        video: { deviceId: { exact: selectedDeviceId.value } },
+      })
+    }
+
     if (videoRef.value && stream.value) {
-      videoRef.value.srcObject = stream.value
-      videoRef.value.onloadedmetadata = () => {
-        loading.value = false
-        videoRef.value?.play()
-        if (timeoutId) clearTimeout(timeoutId)
-      }
-      timeoutId = window.setTimeout(() => {
-        if (loading.value) {
-          errorMsg.value = 'Camera stream did not load in time. Please refresh or try a different browser.'
-          loading.value = false
-        }
-      }, 5000)
+      // Remove existing srcObject before setting a new one to help avoid interruptions
+      videoRef.value.srcObject = null
+      await new Promise((resolve, reject) => {
+        videoRef.value!.onloadedmetadata = () => resolve(true)
+        videoRef.value!.onplay = () => resolve(true)
+        videoRef.value!.onerror = (e) => reject(e)
+        videoRef.value!.srcObject = stream.value
+      })
+
+      await videoRef.value.play()
+      loading.value = false
     } else {
       errorMsg.value = 'Video element or stream not available.'
       loading.value = false
@@ -100,6 +136,11 @@ onMounted(async () => {
     errorMsg.value = 'Could not access the camera. ' + (err?.message || '')
     loading.value = false
   }
+}
+
+onMounted(async () => {
+  await getVideoDevices()
+  await startCamera()
 })
 
 onBeforeUnmount(() => {
@@ -109,23 +150,22 @@ onBeforeUnmount(() => {
   if (timerId) clearTimeout(timerId)
 })
 
-function takePhotoSequence() {
-  gallery.value = []
-  isTakingSequence.value = true
-  currentPhotoIdx.value = 0
-  countdown.value = 4
-  nextTick().then(() => {
-    runCountdownAndCapture()
-  })
-}
+// Watch selected device changes and restart camera
+watch(selectedDeviceId, async (newId, oldId) => {
+  if (newId !== oldId) {
+    await startCamera()
+  }
+})
 
 function runCountdownAndCapture() {
   if (currentPhotoIdx.value >= maxPhotos.value) {
     isTakingSequence.value = false
     showGallery.value = true
+    title.value = 'Photobooth JU' // Reset title after photo sequence
+    goToFrameDesign()
     return
   }
-  countdown.value = 1
+  countdown.value = timerDuration.value
   timerId = window.setInterval(() => {
     countdown.value--
     if (countdown.value <= 0) {
@@ -136,6 +176,17 @@ function runCountdownAndCapture() {
       setTimeout(runCountdownAndCapture, 500)
     }
   }, 1000)
+}
+
+function takePhotoSequence() {
+  title.value = 'Smile :)'
+  gallery.value = []
+  isTakingSequence.value = true
+  currentPhotoIdx.value = 0
+  countdown.value = timerDuration.value
+  nextTick().then(() => {
+    runCountdownAndCapture()
+  })
 }
 
 function capturePhotoWithFlash() {
@@ -169,32 +220,19 @@ function capturePhoto() {
   gallery.value.push(canvasRef.value.toDataURL('image/png'))
 }
 
-function retakeAllPhotos() {
-  gallery.value = []
-  showGallery.value = false
-  isTakingSequence.value = false
-  currentPhotoIdx.value = 0
-  countdown.value = 4
-}
-
-function openPreview(photo: string) {
-  previewPhoto.value = photo
-}
-
-function closePreview() {
-  previewPhoto.value = null
-}
-
 function goToFrameDesign() {
-  frameStore.setTakenPhotos(gallery.value);
-  router.push('/photoboothSelection');
+  frameStore.setTakenPhotos(gallery.value)
+  router.push('/photoboothSelection')
 }
 </script>
 
 
 <style scoped>
+.title {
+  margin-bottom: 1rem;
+}
 .photobooth {
-  font-family: 'Chewy', cursive;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1rem;
   font-weight: normal;
   color: #000;
@@ -205,23 +243,23 @@ function goToFrameDesign() {
 }
 .video-container {
   position: relative;
-  width: 400px;
-  height: 300px;
+  width: 640px;
+  height: 480px;
 }
 video {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
   border: 2px solid #42b883;
-  border-radius: 8px;
-  background: #000;
-  width: 400px;
-  height: 300px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 .flash-overlay {
   position: absolute;
   top: 0;
   left: 0;
-  width: 400px;
-  height: 300px;
-  background: white;
+  width: 100%;
+  height: 100%;
+  background: rgb(255, 255, 255);
   opacity: 0.8;
   pointer-events: none;
   border-radius: 8px;
@@ -236,7 +274,6 @@ button {
   font-family: 'Quicksand', sans-serif;
   font-size: 1rem;
   color: #222;
-  margin-top: 1rem;
   margin-right: 0.5rem;
   padding: 0.5rem 1.5rem;
   font-size: 1.2rem;
@@ -250,8 +287,11 @@ button:disabled {
   background: #aaa;
   cursor: not-allowed;
 }
+button, select {
+  transition: background-color 0.3s ease;
+}
 button:hover:enabled {
-  background: #368f6e;
+  background-color: #368f6e;
 }
 .loading {
   margin: 2rem;
@@ -337,5 +377,35 @@ button:hover:enabled {
 }
 .close-btn:hover {
   background: #a31515;
+}
+.timer-select {
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.timer-select label {
+  font-weight: 600;
+}
+
+.timer-select select {
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+.camera-select {
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.camera-select select {
+  margin-left: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }
 </style> 

@@ -1,0 +1,6 @@
+export default {
+    red: "#FF0000",
+    blue: "#0000FF",
+    yellow: "#FFFF00"
+  };
+  

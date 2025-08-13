@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Apricot&display=swap');
+
+.apricot-font {
+  font-family: 'Apricot', cursive;
+}
+
+.preview-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;   /* horizontal centering */
+    justify-content: center; /* vertical centering */
+    min-height: 100vh;      /* make it take full height */
+    padding: 20px;
+    text-align: center;     /* center text inside */
+  }
+
+.content-wrapper {
+  display: flex;
+  gap: 20px;
+}
+
+.frame-preview img {
+  max-width: 300px;
+  border: 2px solid #ccc;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.actions {
+  margin-top: 1rem;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #0056b3;
+}

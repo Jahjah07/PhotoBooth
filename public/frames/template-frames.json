@@ -1,4 +1,5 @@
 [
-    { "layout": "1x3", "url": "/frames/1X3.png", "name": "Template 1x3", "photos": 3},
-    { "layout": "2x3", "url": "/frames/2X3.png", "name": "Template 2x3", "photos": 6}
+    { "layout": "1x3", "url": "/frames/1X3.png", "name": "1x3", "photos": 3},
+    { "layout": "2x2", "url": "/frames/2X2.png", "name": "2x2", "photos": 4},
+    { "layout": "2x3", "url": "/frames/2X3.png", "name": "2x3", "photos": 6}
   ]

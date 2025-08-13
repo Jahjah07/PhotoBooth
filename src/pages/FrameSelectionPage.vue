@@ -3,13 +3,13 @@
     <h1>Select Your Frame</h1>
     <div class="frames-grid">
       <div
-        v-for="(frame, index) in store.frames"
+        v-for="(templates, index) in store.templates"
         :key="index"
         class="frame-card"
-        @click="selectFrame(frame)"
+        @click="selectTemplate(templates)"
       >
-        <img :src="frame.url" :alt="frame.name" class="frame-image" />
-        <p>{{ frame.name }}</p>
+        <img :src="templates.url" :alt="templates.name" class="frame-image" />
+        <p>{{ templates.name }}</p>
       </div>
     </div>
   </div>
@@ -24,17 +24,26 @@ const router = useRouter()
 const store = useFrameStore()
 
 onMounted(() => {
-  store.loadFrames()
+  store.loadTemplates()
 })
 
-function selectFrame(frame) {
-  store.selectFrame(frame)
+function selectTemplate(templates) {
+  store.selectTemplate(templates)
   router.push('/photobooth') // Go directly to photobooth
 }
 </script>
 
 <style scoped>
+h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 2.5rem;
+  color: #222;
+  margin-bottom: 1.5rem;
+}
+
 .frame-selection {
+  margin-top: 6rem;
   text-align: center;
 }
 
@@ -48,13 +57,10 @@ function selectFrame(frame) {
 }
 
 .frame-card {
-  width: 30%;
-  background: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: transform 0.2s ease;
-  padding: 0.5rem;
 }
 
 .frame-card:hover {
@@ -67,7 +73,7 @@ function selectFrame(frame) {
   object-fit: contain;
   display: block;
   margin: 0 auto;
-  max-height: 250px; /* This limits tall frames */
+  max-height: 450px;
 }
 
 p {

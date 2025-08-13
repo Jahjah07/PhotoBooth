@@ -1,8 +1,8 @@
 <template>
   <div class="photo-selection">
     <h2>Select Photos for Your Frame</h2>
-    <p class="frame-info">Frame layout: {{ frame.layout }}</p>
-    <p class="frame-info">You need {{ frame.photos }} photo(s).</p>
+    <p v-if="template" class="frame-info">Frame layout: {{ template.layout }}</p>
+    <p v-if="template" class="frame-info">You need {{ template.photos }} photo(s).</p>
 
     <div class="photos-grid">
       <div
@@ -18,7 +18,7 @@
 
     <button
       class="preview-btn"
-      :disabled="selectedPhotos.length !== frame.photos"
+      :disabled="selectedPhotos.length !== template.photos"
       @click="goToPreview"
     >
       Continue to Preview
@@ -37,7 +37,7 @@ export default {
     const router = useRouter();
 
     const photosTaken = computed(() => photoStore.takenPhotos);
-    const frame = computed(() => photoStore.selectedFrame);
+    const template = computed(() => photoStore.selectedTemplate);
 
     const selectedPhotos = ref([]);
 
@@ -45,7 +45,7 @@ export default {
       const index = selectedPhotos.value.indexOf(photo);
       if (index === -1) {
         // Not selected yet, check if limit reached
-        if (selectedPhotos.value.length < frame.value.photos) {
+        if (selectedPhotos.value.length < template.value.photos) {
           selectedPhotos.value.push(photo);
         }
       } else {
@@ -61,7 +61,7 @@ export default {
 
     return {
       photosTaken,
-      frame,
+      template,
       selectedPhotos,
       togglePhoto,
       goToPreview,
