@@ -19,7 +19,9 @@ const routes = [
   { path: '/about', component: AboutPage },
   { path: '/contact', component: UnderConstruction },
   { path: '/privacy', component: PrivacyPage },
-  { path: '/coffee', component: UnderConstruction }
+  { path: '/coffee', component: UnderConstruction },
+  { path: '/under', component: ContactPage }, //remove
+  { path: '/construction', component: DonationPage } //remove
 ]
 
 const router = createRouter({
