@@ -12,30 +12,46 @@
 }
 
 .title {
+  margin-top: 7rem;
   font-family: 'Montserrat', sans-serif;
   font-size: 28px;
   font-weight: bold;
   text-align: center;
+  margin-bottom: 1.5rem;
+  z-index: 2; /* make sure it’s above background elements */
 }
 
 .preview-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;   /* horizontal centering */
-    justify-content: center; /* vertical centering */
-    min-height: 100vh;      /* make it take full height */
-    padding: 20px;
-    text-align: center;     /* center text inside */
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 20px; /* normal padding */
+  text-align: center;
+  position: relative;
+  color: #000; /* ensure text is visible */
+  z-index: 1;
+}
 
 .content-wrapper {
   display: flex;
   gap: 20px;
+  justify-content: center;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.frame-preview {
+  max-width: 300px;
+  border: 2px solid #ccc;
+  flex-shrink: 0;
 }
 
 .frame-preview img {
-  max-width: 300px;
-  border: 2px solid #ccc;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
 
 .controls {
@@ -47,13 +63,13 @@
 .actions {
   display: flex;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
 .custom-btn {
   padding: 10px 24px;
   border: none;
-  border-radius: 9999px; /* full pill */
+  border-radius: 9999px;
   color: #fff;
   text-align: center;
   font-weight: 600;
@@ -68,11 +84,27 @@
   box-shadow: 0 6px 12px rgba(0,0,0,0.25);
 }
 
-/* Button variations */
 .change-btn {
-  background: linear-gradient(90deg, #ec4899, #8b5cf6); /* pink → purple */
+  background: linear-gradient(90deg, #ec4899, #8b5cf6);
 }
 
 .download-btn {
-  background: linear-gradient(90deg, #3b82f6, #6366f1); /* blue → indigo */
+  background: linear-gradient(90deg, #3b82f6, #6366f1);
+}
+
+/* Optional small responsive tweaks */
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column; /* stack vertically */
+    align-items: center;    /* center horizontally */
+    gap: 15px;              /* smaller gap for vertical stacking */
+  }
+
+  .frame-preview {
+    max-width: 90%;
+  }
+
+  .custom-btn {
+    width: 100%;
+  }
 }

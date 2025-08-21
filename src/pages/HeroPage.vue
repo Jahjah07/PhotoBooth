@@ -4,6 +4,7 @@
     <img src="/images/Photobooth-design.png" class="sticker sticker-bottom-left" alt="Sticker" />
     <img src="/images/Photobooth-design.png" class="sticker sticker-top-right" alt="Sticker" />
     <img src="/images/Photobooth-design.png" class="sticker sticker-bottom-right" alt="Sticker" />
+    
     <div class="hero-content">
       <div class="hero-stack">
         <h1 class="hero-title">Photobooth</h1>
@@ -11,6 +12,7 @@
         <span class="hero-subtitle">Capture Moments That Matter</span>
       </div>
     </div>
+    
     <div class="cta-section">
       <button class="cta-button" @click="FrameSelection">
         Start →
@@ -44,6 +46,7 @@ function FrameSelection() {
   padding: 2rem;
   margin: 0;
   position: relative;
+  overflow: hidden;
 }
 
 .sticker {
@@ -54,9 +57,10 @@ function FrameSelection() {
   pointer-events: none;
   user-select: none;
 }
+
 .sticker-top-left {
   top: 150px;
-  left: 0px;
+  left: 0;
   margin: 2rem;
 }
 .sticker-bottom-left {
@@ -79,6 +83,7 @@ function FrameSelection() {
   text-align: center;
   width: 100%;
   max-width: 1200px;
+  z-index: 2;
 }
 
 .hero-stack {
@@ -118,6 +123,7 @@ function FrameSelection() {
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
+  z-index: 2;
 }
 
 .cta-button {
@@ -136,23 +142,59 @@ function FrameSelection() {
   opacity: 0.7;
 }
 
+/* Tablet */
+@media (max-width: 1024px) {
+  .hero-title {
+    font-size: 3rem;
+  }
+  .divider-line {
+    width: 200px;
+  }
+  .sticker {
+    width: 200px;
+  }
+  .cta-button {
+    font-size: 1.1rem;
+    padding: 0.5rem 0.8rem;
+  }
+}
+
+/* Mobile */
 @media (max-width: 768px) {
   .hero-title {
     font-size: 2.2rem;
   }
-  .hero-subtitle {
-    font-size: 1rem;
-  }
   .divider-line {
     width: 60px;
     margin: 0.3rem 0;
+  }
+  .hero-subtitle {
+    font-size: 0.9rem;
+    padding: 0 1rem;
   }
   .cta-section {
     bottom: 2rem;
   }
   .sticker {
     width: 60px;
-    margin: 1rem;
+    margin: 0.5rem;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.8rem;
+  }
+  .hero-subtitle {
+    font-size: 0.8rem;
+  }
+  .cta-button {
+    font-size: 1rem;
+    padding: 0.4rem 0.6rem;
+  }
+  .sticker {
+    display: none; /* hide stickers on very small screens for clarity */
   }
 }
 </style>

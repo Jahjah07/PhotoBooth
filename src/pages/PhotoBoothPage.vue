@@ -228,9 +228,6 @@ function goToFrameDesign() {
 
 
 <style scoped>
-.title {
-  margin-bottom: 1rem;
-}
 .photobooth {
   font-family: 'Montserrat', sans-serif;
   font-size: 1rem;
@@ -240,12 +237,36 @@ function goToFrameDesign() {
   flex-direction: column;
   align-items: center;
   margin-top: 6rem;
+  padding: 0 1rem; /* Horizontal padding for small screens */
 }
+
+.countdown h2 {
+  font-size: 2rem;
+  text-align: center;
+  margin: 0.5rem 0;
+}
+
+.timer {
+  font-size: 3rem;
+  color: #42b883;
+  margin-top: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.title {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  text-align: center;
+}
+
 .video-container {
   position: relative;
-  width: 640px;
-  height: 480px;
+  width: 100%;
+  max-width: 640px;
+  aspect-ratio: 4 / 3; /* Keep video ratio */
 }
+
 video {
   width: 100%;
   height: 100%;
@@ -253,6 +274,13 @@ video {
   border: 2px solid #42b883;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
+
+canvas {
+  width: 100% !important;
+  height: auto !important;
+  border-radius: 10px;
+}
+
 .flash-overlay {
   position: absolute;
   top: 0;
@@ -262,57 +290,87 @@ video {
   background: rgb(255, 255, 255);
   opacity: 0.8;
   pointer-events: none;
-  border-radius: 8px;
+  border-radius: 10px;
   z-index: 2;
   animation: flash 0.12s linear;
 }
+
 @keyframes flash {
   from { opacity: 0.8; }
   to { opacity: 0; }
 }
+
+.timer-select,
+.camera-select {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.timer-select label,
+.camera-select label {
+  font-weight: 600;
+}
+
+select {
+  padding: 0.3rem 0.6rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  min-width: 120px;
+}
+
 button {
   font-family: 'Quicksand', sans-serif;
   font-size: 1rem;
-  color: #222;
+  color: #fff;
   margin-right: 0.5rem;
   padding: 0.5rem 1.5rem;
-  font-size: 1.2rem;
   background: #42b883;
-  color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
+
 button:disabled {
   background: #aaa;
   cursor: not-allowed;
 }
-button, select {
-  transition: background-color 0.3s ease;
-}
+
 button:hover:enabled {
   background-color: #368f6e;
 }
+
 .loading {
   margin: 2rem;
   font-size: 1.2rem;
   color: #888;
 }
+
 .error {
   margin: 2rem;
   color: #d32f2f;
   font-weight: bold;
   font-size: 1.2rem;
 }
+
 .hidden {
   display: none;
 }
+
 .gallery {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin: 1rem 0;
+  justify-content: center;
 }
+
 .gallery-photo {
   width: 80px;
   height: 60px;
@@ -322,21 +380,25 @@ button:hover:enabled {
   cursor: pointer;
   transition: box-shadow 0.2s;
 }
+
 .gallery-photo:hover {
   box-shadow: 0 0 0 3px #42b88355;
 }
+
 .countdown {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 2rem;
 }
+
 .timer {
   font-size: 3rem;
   color: #42b883;
   margin-top: 1rem;
   font-weight: bold;
 }
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -349,6 +411,7 @@ button:hover:enabled {
   justify-content: center;
   z-index: 1000;
 }
+
 .modal-content {
   background: #fff;
   padding: 1.5rem;
@@ -358,6 +421,7 @@ button:hover:enabled {
   flex-direction: column;
   align-items: center;
 }
+
 .modal-photo {
   max-width: 80vw;
   max-height: 70vh;
@@ -365,6 +429,7 @@ button:hover:enabled {
   margin-bottom: 1rem;
   box-shadow: 0 0 0 4px #42b88333;
 }
+
 .close-btn {
   background: #d32f2f;
   color: #fff;
@@ -375,37 +440,55 @@ button:hover:enabled {
   cursor: pointer;
   margin-top: 0.5rem;
 }
+
 .close-btn:hover {
   background: #a31515;
 }
-.timer-select {
-  margin-top: 1.5rem;
-  margin-bottom: 2rem;
-  display: flex;
-  gap: 1rem;
-  align-items: center;
+
+/* Responsive Media Queries */
+@media (max-width: 768px) {
+  .countdown h2 {
+    font-size: 1.5rem;
+  }
+  .timer {
+    font-size: 2.5rem;
+  }
+  .title {
+    font-size: 1.8rem;
+  }
+  .video-container {
+    max-width: 90%;
+  }
+  button {
+    padding: 0.4rem 1rem;
+    font-size: 1rem;
+  }
 }
 
-.timer-select label {
-  font-weight: 600;
-}
-
-.timer-select select {
-  padding: 0.25rem 0.5rem;
-  font-size: 1rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-.camera-select {
-  margin-top: 1rem;
-  font-weight: 600;
-}
-
-.camera-select select {
-  margin-left: 0.5rem;
-  padding: 0.3rem 0.6rem;
-  font-size: 1rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+@media (max-width: 480px) {
+  .countdown h2 {
+    font-size: 1.2rem;
+  }
+  .timer {
+    font-size: 2rem;
+  }
+  .title {
+    font-size: 1.5rem;
+  }
+  .video-container {
+    max-width: 100%;
+  }
+  .timer-select,
+  .camera-select {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  button, select {
+    width: 100%;
+  }
+  .gallery-photo {
+    width: 60px;
+    height: 45px;
+  }
 }
 </style> 

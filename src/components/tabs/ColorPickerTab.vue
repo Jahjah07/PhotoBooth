@@ -52,8 +52,8 @@ function onWheelColorChange(event) {
 <style scoped>
 .color-picker-tab {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(36px, 1fr));
+  gap: 1rem;
   justify-items: center;
 }
 

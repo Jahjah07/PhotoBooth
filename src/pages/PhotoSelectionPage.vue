@@ -78,11 +78,18 @@ export default {
   margin-right: auto;
   padding: 20px;
   text-align: center;
+  font-family: 'Montserrat', sans-serif;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 .frame-info {
   color: #555;
   font-size: 14px;
+  margin: 2px 0;
 }
 
 .photos-grid {
@@ -99,7 +106,11 @@ export default {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   border: 3px solid transparent;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, transform 0.2s ease;
+}
+
+.photo-item:hover {
+  transform: scale(1.03);
 }
 
 .photo-item.selected {
@@ -122,6 +133,7 @@ export default {
   font-size: 16px;
   cursor: pointer;
   margin-top: 20px;
+  transition: background-color 0.3s ease;
 }
 
 .preview-btn:disabled {
@@ -132,4 +144,46 @@ export default {
 .preview-btn:hover:not(:disabled) {
   background: #3a9cdb;
 }
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  .photos-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+  }
+
+  .photo-preview {
+    height: 100px;
+  }
+
+  .preview-btn {
+    font-size: 15px;
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  .photos-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+  }
+
+  .photo-preview {
+    height: 80px;
+  }
+
+  .preview-btn {
+    font-size: 14px;
+    padding: 7px 14px;
+  }
+}
+
 </style>

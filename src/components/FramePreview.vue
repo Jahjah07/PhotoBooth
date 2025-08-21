@@ -59,15 +59,19 @@ const rowsCount = computed(() => gridSize.value[1]);
 const frameStyle = computed(() => {
   // Ensure same height for 1x3 and 2x3
   let height = "180px";
+  let width = "230px";
+  let padding = "10px";
+
   if (rowsCount.value === 3) {
     height = "380px"; // fixed height for tall frames
+    width = "220px";
   } else if (rowsCount.value === 2){
     height = "280px";
   }
 
   return {
     position: "relative",
-    padding: "10px",
+    padding,
     background: selectedDesign.value ? "transparent" : props.frameColor,
     textAlign: "center",
     display: "flex",
@@ -76,6 +80,7 @@ const frameStyle = computed(() => {
     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
     overflow: "hidden",
     height, // apply calculated height
+    width,
   };
 });
 
@@ -170,6 +175,7 @@ const photoGridStyle = computed(() => ({
   object-fit: cover;
 }
 
+
 .photo-slot {
   display: flex;
   justify-content: center;
@@ -192,6 +198,7 @@ const photoGridStyle = computed(() => ({
   font-weight: bold;
   z-index: 1;
   position: relative;
+  word-break: break-word;
 }
 
 .frame-datetime {
@@ -203,6 +210,7 @@ const photoGridStyle = computed(() => ({
   z-index: 1;
   position: relative;
 }
+
 .stickers-layer {
   position: absolute;
   width: 100%;
@@ -217,23 +225,23 @@ const photoGridStyle = computed(() => ({
   pointer-events: none;
   background: transparent;
 }
+
 .delete-btn {
   position: absolute;
   top: -25px;
   right: -25px;
-  width: 24px;          /* equal width */
-  height: 24px;         /* equal height */
-  display: flex;        /* center the X */
+  width: 24px;
+  height: 24px;
+  display: flex;
   align-items: center;
   justify-content: center;
   background: rgb(146, 145, 145);
   color: white;
   font-size: 14px;
   border: none;
-  border-radius: 50%;   /* makes it perfectly circular */
+  border-radius: 50%;
   cursor: pointer;
-  padding: 0;           /* remove default padding */
-  line-height: 1;       /* prevents text stretching */
+  padding: 0;
+  line-height: 1;
 }
-
 </style>

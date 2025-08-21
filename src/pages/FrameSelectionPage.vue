@@ -40,19 +40,20 @@ h1 {
   font-size: 2.5rem;
   color: #222;
   margin-bottom: 1.5rem;
+  text-align: center;
 }
 
 .frame-selection {
   margin-top: 6rem;
   text-align: center;
+  padding: 0 1rem;
 }
 
 .frames-grid {
   display: grid;
-  place-items: center;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
-  padding: 1rem;
+  justify-items: center;
   margin-top: 4rem;
 }
 
@@ -61,6 +62,8 @@ h1 {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: transform 0.2s ease;
+  background: #fff;
+  padding: 0.5rem;
 }
 
 .frame-card:hover {
@@ -68,16 +71,64 @@ h1 {
 }
 
 .frame-image {
-  max-width: 100%;
+  width: 100%;
   height: auto;
   object-fit: contain;
   display: block;
-  margin: 0 auto;
-  max-height: 450px;
+  max-height: 350px;
 }
 
 p {
   margin-top: 0.5rem;
   font-weight: 500;
+  font-size: 1rem;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  h1 {
+    padding: 18rem 1rem 2rem;
+    font-size: 2rem;
+  }
+  .frame-image {
+    max-height: 300px;
+  }
+  p {
+    font-size: 0.95rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  h1 {
+    padding: 18rem 1rem 2rem;
+    font-size: 1.8rem;
+  }
+  .frames-grid {
+    gap: 0.8rem;
+  }
+  .frame-card {
+    padding: 0.3rem;
+  }
+  .frame-image {
+    max-height: 250px;
+  }
+  p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  h1 {
+    margin-top: 6rem;
+    font-size: 1.5rem;
+  }
+  .frame-image {
+    max-height: 200px;
+  }
+  p {
+    font-size: 0.85rem;
+  }
 }
 </style>

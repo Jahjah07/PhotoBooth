@@ -179,4 +179,20 @@ function onThemeSelect(framePath) {
   margin-top: 16px;
   font-size: 14px;
 }
+
+@media (max-width: 1024px) {
+  .design-panel {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .tabs {
+    flex-wrap: wrap;
+  }
+  .tab {
+    margin-bottom: 8px;
+    flex: 1 1 45%;
+  }
+}
 </style>

@@ -50,4 +50,35 @@
   margin-bottom: 1.5rem;
   line-height: 1.7;
 }
+
+@media (max-width: 768px) {
+  .privacy-container {
+    padding: 2.5rem 1.5rem;
+  }
+  .privacy-title {
+    font-size: 1.8rem;
+  }
+  .privacy-subtitle {
+    font-size: 1.3rem;
+  }
+  .privacy-text {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .privacy-container {
+    padding: 2rem 1rem;
+    border-radius: 12px;
+  }
+  .privacy-title {
+    font-size: 1.6rem;
+  }
+  .privacy-subtitle {
+    font-size: 1.2rem;
+  }
+  .privacy-text {
+    font-size: 0.95rem;
+  }
+}
 </style>

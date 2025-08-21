@@ -6,7 +6,8 @@
           <span class="logo-text">JU</span>
         </router-link>
       </div>
-      
+
+      <!-- Desktop Navigation -->
       <nav class="navigation">
         <router-link to="/" class="nav-link" @click="Clear">Home</router-link>
         <router-link to="/about" class="nav-link">About</router-link>
@@ -14,38 +15,61 @@
         <router-link to="/contact" class="nav-link">Contact</router-link>
         <router-link to="/coffee" class="nav-link">Buy Me Coffee</router-link>
       </nav>
+
+      <!-- Mobile Menu Icon -->
+      <img 
+        src="/icons/menu.png" 
+        alt="Menu" 
+        class="menu-icon" 
+        @click="toggleMobileMenu"
+      />
+    </div>
+
+    <!-- Mobile Menu -->
+    <div v-if="mobileMenuOpen" class="mobile-menu">
+      <router-link to="/" class="nav-link" @click="handleMobileClick">Home</router-link>
+      <router-link to="/about" class="nav-link" @click="handleMobileClick">About</router-link>
+      <router-link to="/privacy" class="nav-link" @click="handleMobileClick">Privacy Policy</router-link>
+      <router-link to="/contact" class="nav-link" @click="handleMobileClick">Contact</router-link>
+      <router-link to="/coffee" class="nav-link" @click="handleMobileClick">Buy Me Coffee</router-link>
     </div>
   </header>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useFrameStore } from "../stores/frameStore";
 
 export default defineComponent({
   name: 'Header',
   setup() {
     const frameStore = useFrameStore();
+    const mobileMenuOpen = ref(false);
 
     function Clear() {
       frameStore.clearStickers();
     }
 
+    function toggleMobileMenu() {
+      mobileMenuOpen.value = !mobileMenuOpen.value;
+    }
+
+    function handleMobileClick() {
+      Clear();
+      mobileMenuOpen.value = false; // close menu on click
+    }
+
     return {
-      Clear
+      Clear,
+      mobileMenuOpen,
+      toggleMobileMenu,
+      handleMobileClick
     };
   }
 });
 </script>
 
 <style scoped>
-@font-face {
-  font-family: 'Cinzel';
-  src: url('/fonts/Cinzel-Regular.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-}
-
 .header {
   background: transparent;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -63,10 +87,6 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.logo {
-  flex-shrink: 0;
 }
 
 .logo-link {
@@ -105,28 +125,36 @@ export default defineComponent({
   font-weight: 500;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .header-container {
-    padding: 1rem;
-  }
-  
-  .navigation {
-    gap: 1.5rem;
-  }
-  
-  .nav-link {
-    font-size: 0.9rem;
-  }
+/* Mobile Menu Icon */
+.menu-icon {
+  display: none;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
 }
 
-@media (max-width: 480px) {
+/* Mobile Menu */
+.mobile-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 2rem;
+  gap: 1rem;
+  z-index: 999;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .navigation {
-    gap: 1rem;
+    display: none; /* hide desktop nav */
   }
-  
-  .nav-link {
-    font-size: 0.8rem;
+  .menu-icon {
+    display: block; /* show menu icon */
   }
 }
 </style>
