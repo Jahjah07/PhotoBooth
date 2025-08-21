@@ -10,6 +10,7 @@ export const useFrameStore = defineStore('frame', {
     totalPhotos: 0,
     takenPhotos: [] as string[],
     selectedPhotos: [] as string[],
+    selectedStickers: [] as any[],
   }),
 
   actions: {
@@ -39,6 +40,25 @@ export const useFrameStore = defineStore('frame', {
       } catch (err) {
         console.error('Failed to load designs:', err)
       }
+    },
+
+    addSticker(sticker: any) {
+      this.selectedStickers.push({
+        ...sticker,
+        x: 100, // default position
+        y: 100,
+        w: 100,  // default width
+        h: 100,  // default height
+        id: Date.now(), // unique id
+      });
+    },
+  
+    removeSticker(stickerId: number) {
+      this.selectedStickers = this.selectedStickers.filter(s => s.id !== stickerId)
+    },
+  
+    clearStickers() {
+      this.selectedStickers = []
     },
 
     /** Select a template (layout) */

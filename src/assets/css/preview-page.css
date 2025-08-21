@@ -4,6 +4,20 @@
   font-family: 'Apricot', cursive;
 }
 
+@font-face {
+  font-family: 'Quicksand';
+  src: url('/fonts/Fredoka-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+}
+
 .preview-page {
     display: flex;
     flex-direction: column;
@@ -31,17 +45,34 @@
 }
 
 .actions {
+  display: flex;
+  gap: 1rem;
   margin-top: 1rem;
 }
 
-button {
-  background-color: #007bff;
-  color: white;
+.custom-btn {
+  padding: 10px 24px;
   border: none;
-  padding: 8px 12px;
-  margin-right: 1rem;
+  border-radius: 9999px; /* full pill */
+  color: #fff;
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
   cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-button:hover {
-  background-color: #0056b3;
+
+.custom-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+}
+
+/* Button variations */
+.change-btn {
+  background: linear-gradient(90deg, #ec4899, #8b5cf6); /* pink → purple */
+}
+
+.download-btn {
+  background: linear-gradient(90deg, #3b82f6, #6366f1); /* blue → indigo */
 }

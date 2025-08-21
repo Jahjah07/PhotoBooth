@@ -58,6 +58,10 @@ function onActiveTabUpdate(val) {
   emit('update:activeTab', val);
 }
 
+function onStickerSelect(sticker) {
+  frameStore.addSticker(sticker)
+}
+
 function onThemeSelect(framePath) {
   // Update the selected frame in store
   frameStore.selectedFrame = {
@@ -105,7 +109,7 @@ function onThemeSelect(framePath) {
       </div>
 
       <div v-else-if="activeTab === 'sticker'">
-        <StickersTab />
+        <StickersTab @select-sticker="onStickerSelect" />
       </div>
 
       <div v-else-if="activeTab === 'theme'">
@@ -135,27 +139,29 @@ function onThemeSelect(framePath) {
 </template>
 
 <style scoped>
+@font-face {
+  font-family: 'Quicksand';
+  src: url('/fonts/Quicksand-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .design-panel {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   padding: 16px;
-  width: auto;
+  width: 900px;
   font-family: 'Apricot', sans-serif;
 }
 
 .tabs {
   display: flex;
-  justify-content: space-around;
-  border-bottom: 2px solid #eaeaea;
   margin-bottom: 16px;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .tab {
   padding: 8px;
+  margin-right: 1rem;
   cursor: pointer;
-  background: #ffffff;
-  border-radius: 4px;
   text-align: center;
   transition: background 0.2s, color 0.2s;
 }
@@ -165,8 +171,8 @@ function onThemeSelect(framePath) {
 }
 
 .tab.active {
-  background: #007bff;
-  color: white;
+  border-bottom: 2px solid #000;
+  color: rgb(0, 0, 0);
 }
 
 .tab-content {

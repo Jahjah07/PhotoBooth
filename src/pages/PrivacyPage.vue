@@ -2,11 +2,12 @@
   <div class="privacy-page">
     <div class="privacy-container">
       <h1 class="privacy-title">Privacy Policy</h1>
+      <h2 class="title">Your Privacy Comes First</h2>
       <p class="privacy-text">
-        Your privacy matters! This Photobooth App does not collect, store, or share any of your data or photos. Everything happens locally on your device—your images never leave your browser.
+        Don’t worry—this Photobooth App doesn’t collect, store, or share your photos or personal data. Everything happens right on your device, so your images stay private.
       </p>
       <p class="privacy-text">
-        The app only accesses your camera with your permission, and once you take your photos, they stay with you. No uploads, no tracking, no hidden storage.
+        The app only asks for camera access when you want to take a photo. After that, your pictures stay with you—no uploads, no tracking, no hidden storage.
       </p>
     </div>
   </div>
@@ -24,7 +25,9 @@
   justify-content: center;
   padding: 2rem;
 }
-
+.title{
+  margin-bottom: 10px;
+}
 .privacy-container {
   max-width: 600px;
   background: #fff;

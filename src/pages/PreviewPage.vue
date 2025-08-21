@@ -1,7 +1,6 @@
 <template>
   <div class="preview-page">
     <h2 class="title">Customize Your Frame</h2>
-    <p>Frame: {{ frame.name }}</p>
 
     <div class="content-wrapper">
       <FramePreview
@@ -32,8 +31,8 @@
     </div>
 
     <div class="actions">
-      <button @click="goBack">Change Photos</button>
-      <button @click="downloadFrameImage">Download Image</button>
+      <button @click="goBack" class="custom-btn change-btn">Change Photos</button>
+      <button @click="downloadFrameImage" class="custom-btn download-btn">Download Image</button>
     </div>
   </div>
 </template>

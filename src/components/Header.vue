@@ -8,6 +8,7 @@
       </div>
       
       <nav class="navigation">
+        <router-link to="/" class="nav-link" @click="Clear">Home</router-link>
         <router-link to="/about" class="nav-link">About</router-link>
         <router-link to="/privacy" class="nav-link">Privacy Policy</router-link>
         <router-link to="/contact" class="nav-link">Contact</router-link>
@@ -18,9 +19,23 @@
 </template>
 
 <script lang="ts">
-export default {
-  name: 'Header'
-}
+import { defineComponent } from 'vue';
+import { useFrameStore } from "../stores/frameStore";
+
+export default defineComponent({
+  name: 'Header',
+  setup() {
+    const frameStore = useFrameStore();
+
+    function Clear() {
+      frameStore.clearStickers();
+    }
+
+    return {
+      Clear
+    };
+  }
+});
 </script>
 
 <style scoped>

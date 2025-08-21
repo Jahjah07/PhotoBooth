@@ -8,6 +8,7 @@ import PrivacyPage from './pages/PrivacyPage.vue'
 import PreviewPage from './pages/PreviewPage.vue'
 import ContactPage from './pages/ContactPage.vue'
 import DonationPage from './pages/DonationPage.vue'
+import UnderConstruction from './pages/UnderConstruction.vue'
 
 const routes = [
   { path: '/', component: HeroPage },
@@ -16,9 +17,9 @@ const routes = [
   { path: '/photoboothSelection', component: PhotoSelectionPage },
   { path: '/preview', component: PreviewPage },
   { path: '/about', component: AboutPage },
-  { path: '/contact', component: ContactPage },
+  { path: '/contact', component: UnderConstruction },
   { path: '/privacy', component: PrivacyPage },
-  { path: '/coffee', component: DonationPage }
+  { path: '/coffee', component: UnderConstruction }
 ]
 
 const router = createRouter({

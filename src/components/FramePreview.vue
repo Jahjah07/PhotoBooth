@@ -1,8 +1,12 @@
 <script setup>
 import { computed, watch } from "vue";
 import { useFrameStore } from "../stores/frameStore";
+import VueDraggableResizable from "vue3-draggable-resizable";
+import "vue3-draggable-resizable/dist/Vue3DraggableResizable.css";
 
 const frameStore = useFrameStore();
+
+const stickers = computed(() => frameStore.selectedStickers);
 
 const props = defineProps({
   selectedPhotos: Array,
@@ -15,6 +19,7 @@ const props = defineProps({
   dateTimeFontColor: String,
   formattedDate: String,
   formattedTime: String,
+
 });
 
 // Watch for caption changes: if there's text → clear theme
@@ -53,15 +58,16 @@ const rowsCount = computed(() => gridSize.value[1]);
 
 const frameStyle = computed(() => {
   // Ensure same height for 1x3 and 2x3
-  let height = "auto";
+  let height = "180px";
   if (rowsCount.value === 3) {
     height = "380px"; // fixed height for tall frames
+  } else if (rowsCount.value === 2){
+    height = "280px";
   }
 
   return {
     position: "relative",
     padding: "10px",
-    border: selectedDesign.value ? "none" : `4px solid ${props.frameColor}`,
     background: selectedDesign.value ? "transparent" : props.frameColor,
     textAlign: "center",
     display: "flex",
@@ -120,12 +126,36 @@ const photoGridStyle = computed(() => ({
       <span v-if="showDate && showTime"> | </span>
       <span v-if="showTime">{{ formattedTime }}</span>
     </div>
+
+    <!-- Stickers Layer -->
+    <div class="stickers-layer">
+      <vue-draggable-resizable
+        v-for="sticker in frameStore.selectedStickers"
+        :key="sticker.id"
+        :x="sticker.x"
+        :y="sticker.y"
+        :w="sticker.w"
+        :h="sticker.h"
+        :lock-aspect-ratio="true"
+        :resizable="true"
+        :draggable="true"
+        @activated="frameStore.selectedStickerId = sticker.id"
+        @deactivated="frameStore.selectedStickerId = null"
+      >
+        <img :src="sticker.src" class="sticker-img" />
+        <button v-if="frameStore.selectedStickerId === sticker.id" class="delete-btn" @click="frameStore.removeSticker(sticker.id)">✕</button>
+      </vue-draggable-resizable>
+    </div>
+
+
   </div>
 </template>
 
 <style scoped>
 .frame-preview {
   max-height: 390px;
+  position: relative;
+  overflow: hidden;
 }
 
 .frame-bg {
@@ -173,4 +203,37 @@ const photoGridStyle = computed(() => ({
   z-index: 1;
   position: relative;
 }
+.stickers-layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.sticker-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  background: transparent;
+}
+.delete-btn {
+  position: absolute;
+  top: -25px;
+  right: -25px;
+  width: 24px;          /* equal width */
+  height: 24px;         /* equal height */
+  display: flex;        /* center the X */
+  align-items: center;
+  justify-content: center;
+  background: rgb(146, 145, 145);
+  color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 50%;   /* makes it perfectly circular */
+  cursor: pointer;
+  padding: 0;           /* remove default padding */
+  line-height: 1;       /* prevents text stretching */
+}
+
 </style>

@@ -1,68 +1,100 @@
 <template>
-    <div class="color-picker-tab">
+  <div class="color-picker-tab">
+    <!-- Fake color wheel -->
+    <div class="color-wheel">
       <input
-        class="color-circle"
+        class="color-input"
         id="frameColor"
         type="color"
         :value="frameColor"
-        @input="$emit('update:frameColor', $event.target.value)"
+        @input="onWheelColorChange"
       />
-  
-      <div
-        v-for="(color, index) in colors"
-        :key="index"
-        class="color-circle"
-        :style="{ backgroundColor: color }"
-        @click="selectColor(color)"
-        :class="{ selected: selectedColor === color }"
-      ></div>
     </div>
-  </template>
-  
-  <script setup>
-  import { ref } from "vue";
-  import colors from "../../config/colors.js";
-  
-  const props = defineProps({
-    frameColor: {
-      type: String,
-      required: true
-    }
-  });
-  
-  const emit = defineEmits(["update:frameColor"]);
-  
-  const selectedColor = ref(props.frameColor);
-  
-  function selectColor(color) {
-    selectedColor.value = color;
-    emit("update:frameColor", color);
+
+    <!-- Preset colors -->
+    <div
+      v-for="(color, index) in colors"
+      :key="index"
+      class="color-circle"
+      :style="{ backgroundColor: color }"
+      @click="selectColor(color)"
+      :class="{ selected: selectedColor === color }"
+    ></div>
+  </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+import colors from "../../config/colors.js";
+
+const props = defineProps({
+  frameColor: {
+    type: String,
+    required: true
   }
-  </script>
-  
-  <style scoped>
-  .color-picker-tab {
-    display: flex;
-    flex-direction: row;
-  }
-  .color-circle {
-    margin-right: 1rem;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid transparent;
-  }
-  .color-circle.selected {
-    border: 2px solid black;
-  }
-  input[type="color"]::-webkit-color-swatch-wrapper {
-  padding: 0;
+});
+
+const emit = defineEmits(["update:frameColor"]);
+const selectedColor = ref(props.frameColor);
+
+function selectColor(color) {
+  selectedColor.value = color;
+  emit("update:frameColor", color);
 }
 
-input[type="color"]::-webkit-color-swatch {
-  border: none;
-  border-radius: 50%;
+function onWheelColorChange(event) {
+  const color = event.target.value;
+  selectedColor.value = color; // <-- highlight the wheel
+  emit("update:frameColor", color);
 }
-  </style>
-  
+</script>
+
+<style scoped>
+.color-picker-tab {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0.5rem;
+  justify-items: center;
+}
+
+/* Fake color wheel container */
+.color-wheel {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: conic-gradient(
+    red,
+    yellow,
+    lime,
+    cyan,
+    blue,
+    magenta,
+    red
+  ); /* rainbow gradient wheel */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Transparent real input on top */
+.color-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0; /* invisible but clickable */
+  cursor: pointer;
+}
+
+.color-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.color-circle.selected {
+  border: 2px solid black;
+}
+</style>
