@@ -69,6 +69,12 @@ const frameStyle = computed(() => {
     height = "280px";
   }
 
+  if (colsCount.value === 2) {
+    width = "220px";
+  } else if (colsCount.value === 1){
+    width = "120px";
+  }
+
   return {
     position: "relative",
     padding,

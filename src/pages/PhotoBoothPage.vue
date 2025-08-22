@@ -264,15 +264,14 @@ function goToFrameDesign() {
   position: relative;
   width: 100%;
   max-width: 640px;
-  aspect-ratio: 4 / 3; /* Keep video ratio */
 }
 
 video {
   width: 100%;
-  height: 100%;
+  height: auto;
   border-radius: 10px;
-  border: 2px solid #42b883;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  display: block;
 }
 
 canvas {
@@ -476,7 +475,12 @@ button:hover:enabled {
     font-size: 1.5rem;
   }
   .video-container {
-    max-width: 100%;
+    width: 100%; /* take full width of screen */
+    max-width: 100%; /* override desktop max-width */
+  }
+  video {
+    width: 100%; /* stretch video */
+    height: auto; /* keep aspect ratio */
   }
   .timer-select,
   .camera-select {

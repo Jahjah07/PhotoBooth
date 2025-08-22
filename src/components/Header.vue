@@ -10,10 +10,10 @@
       <!-- Desktop Navigation -->
       <nav class="navigation">
         <router-link to="/" class="nav-link" @click="Clear">Home</router-link>
-        <router-link to="/about" class="nav-link">About</router-link>
-        <router-link to="/privacy" class="nav-link">Privacy Policy</router-link>
-        <router-link to="/contact" class="nav-link">Contact</router-link>
-        <router-link to="/coffee" class="nav-link">Buy Me Coffee</router-link>
+        <router-link to="/about" class="nav-link" @click="Clear">About</router-link>
+        <router-link to="/privacy" class="nav-link" @click="Clear">Privacy Policy</router-link>
+        <router-link to="/contact" class="nav-link" @click="Clear">Contact</router-link>
+        <router-link to="/coffee" class="nav-link" @click="Clear">Buy Me Coffee</router-link>
       </nav>
 
       <!-- Mobile Menu Icon -->

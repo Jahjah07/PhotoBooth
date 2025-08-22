@@ -178,6 +178,8 @@ function onThemeSelect(framePath) {
 .tab-content {
   margin-top: 16px;
   font-size: 14px;
+  max-height: 300px; /* Fixed height for tab content */
+  overflow-y: auto;
 }
 
 @media (max-width: 1024px) {

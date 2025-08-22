@@ -45,8 +45,8 @@ export const useFrameStore = defineStore('frame', {
     addSticker(sticker: any) {
       this.selectedStickers.push({
         ...sticker,
-        x: 100, // default position
-        y: 100,
+        x: 30, // default position
+        y: 30,
         w: 100,  // default width
         h: 100,  // default height
         id: Date.now(), // unique id

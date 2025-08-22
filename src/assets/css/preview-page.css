@@ -92,19 +92,21 @@
   background: linear-gradient(90deg, #3b82f6, #6366f1);
 }
 
-/* Optional small responsive tweaks */
+/* Responsive tweaks */
 @media (max-width: 768px) {
+  .mobile-hidden {
+    display: none;
+  }
   .content-wrapper {
-    flex-direction: column; /* stack vertically */
-    align-items: center;    /* center horizontally */
-    gap: 15px;              /* smaller gap for vertical stacking */
+    margin-top: 20rem; /* Reduced margin for mobile */
   }
+}
 
-  .frame-preview {
-    max-width: 90%;
+@media (max-width: 480px) {
+  .mobile-hidden {
+    display: none;
   }
-
-  .custom-btn {
-    width: 100%;
+  .content-wrapper {
+    margin-top: 23rem; /* Reduced margin for mobile */
   }
 }
